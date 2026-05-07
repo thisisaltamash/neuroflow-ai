@@ -34,6 +34,10 @@ function getAdminNotificationEmail() {
   return process.env.ADMIN_NOTIFICATION_EMAIL || process.env.ADMIN_EMAIL || CONTACT_EMAIL;
 }
 
+function getBookingNotificationEmail() {
+  return process.env.BOOKING_NOTIFICATION_EMAIL || "29altamashansari@gmail.com";
+}
+
 async function sendMail(params: { to: string; subject: string; html: string }) {
   const transporter = getTransporter();
   if (!transporter) {
@@ -107,7 +111,7 @@ export async function sendContactEmails(data: ContactPayload) {
 export async function sendBookingEmails(data: BookingPayload) {
   await Promise.allSettled([
     sendMail({
-      to: getAdminNotificationEmail(),
+      to: getBookingNotificationEmail(),
       subject: `New Demo Booking - ${data.name}`,
       html: `
         <h3>New Demo Booking Request</h3>
