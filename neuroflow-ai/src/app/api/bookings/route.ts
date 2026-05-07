@@ -22,6 +22,16 @@ export async function POST(request: Request) {
     return successResponse({ success: true, booking }, 201);
   } catch (error) {
     console.error("Booking API error:", error);
+    if (error instanceof Error) {
+      if (error.message.includes("MONGODB_URI")) {
+        return errorResponse(error.message, 500);
+      }
+
+      if (process.env.NODE_ENV !== "production") {
+        return errorResponse(`Failed to create booking: ${error.message}`, 500);
+      }
+    }
+
     return errorResponse("Failed to create booking.", 500);
   }
 }

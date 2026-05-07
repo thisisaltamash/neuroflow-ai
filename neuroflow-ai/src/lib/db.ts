@@ -22,6 +22,9 @@ export async function connectDB() {
   if (!MONGODB_URI) {
     throw new Error("MONGODB_URI is not configured.");
   }
+  if (MONGODB_URI.includes("<username>") || MONGODB_URI.includes("<password>")) {
+    throw new Error("MONGODB_URI has placeholder values. Update .env.local with real MongoDB Atlas credentials.");
+  }
 
   if (cached?.conn) return cached.conn;
 
