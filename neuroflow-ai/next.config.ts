@@ -1,9 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  typescript: {
-    ignoreBuildErrors: true,
-  },
+  reactStrictMode: true,
+  poweredByHeader: false,
+  compress: true,
+  turbopack: {
+    root: process.cwd()
+  }
 };
 
 export default nextConfig;

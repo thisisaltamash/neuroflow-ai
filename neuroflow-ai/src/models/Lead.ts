@@ -1,27 +1,37 @@
 import { Schema, model, models } from "mongoose";
-
-export type LeadStatus = "new" | "contacted" | "closed";
+import type { InquiryStatus } from "@/types/domain";
 
 export interface LeadDocument {
   name: string;
-  phone: string;
   email: string;
-  clinicName: string;
+  phone: string;
+  company: string;
+  businessType: string;
+  serviceInterested: string;
   message: string;
+  source: string;
+  status: InquiryStatus;
   createdAt: Date;
-  status: LeadStatus;
+  updatedAt: Date;
 }
 
 const leadSchema = new Schema<LeadDocument>(
   {
     name: { type: String, required: true, trim: true },
-    phone: { type: String, required: true, trim: true },
     email: { type: String, required: true, trim: true, lowercase: true },
-    clinicName: { type: String, required: true, trim: true },
+    phone: { type: String, required: true, trim: true },
+    company: { type: String, required: true, trim: true },
+    businessType: { type: String, required: true, trim: true },
+    serviceInterested: { type: String, required: true, trim: true },
     message: { type: String, required: true, trim: true },
-    status: { type: String, enum: ["new", "contacted", "closed"], default: "new" }
+    source: { type: String, default: "website", trim: true },
+    status: { type: String, enum: ["new", "in_progress", "won", "lost"], default: "new" }
   },
-  { timestamps: { createdAt: true, updatedAt: false } }
+  { timestamps: true }
 );
+
+leadSchema.index({ createdAt: -1 });
+leadSchema.index({ status: 1 });
+leadSchema.index({ email: 1 });
 
 export const Lead = models.Lead || model<LeadDocument>("Lead", leadSchema);

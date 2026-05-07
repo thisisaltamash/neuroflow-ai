@@ -1,100 +1,105 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/components/providers/ToastProvider";
+import { DEFAULT_ADMIN_EMAIL } from "@/lib/constants";
 
-type Lead = {
-  _id: string;
-  name: string;
-  email: string;
-  phone: string;
-  clinicName: string;
-  message: string;
-  status: "new" | "contacted" | "closed";
-  createdAt: string;
-};
-
-export default function AdminPage() {
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [leads, setLeads] = useState<Lead[]>([]);
-  const [q, setQ] = useState("");
-  const [status, setStatus] = useState("all");
-  const [error, setError] = useState("");
-
-  async function login(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const form = new FormData(e.currentTarget);
-    const res = await fetch("/api/admin/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: form.get("email"), password: form.get("password") })
-    });
-    if (res.ok) {
-      setLoggedIn(true);
-      setError("");
-    } else setError("Invalid credentials");
-  }
-
-  async function fetchLeads() {
-    const res = await fetch(`/api/admin/leads?q=${encodeURIComponent(q)}&status=${encodeURIComponent(status)}`);
-    if (res.status === 401) return setLoggedIn(false);
-    const data = await res.json();
-    setLeads(data.leads || []);
-  }
-
-  async function updateStatus(id: string, newStatus: string) {
-    await fetch("/api/admin/leads", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, status: newStatus })
-    });
-    fetchLeads();
-  }
+export default function AdminLoginPage() {
+  const router = useRouter();
+  const { showToast } = useToast();
+  const [email, setEmail] = useState(DEFAULT_ADMIN_EMAIL);
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [checking, setChecking] = useState(true);
 
   useEffect(() => {
-    if (loggedIn) fetchLeads();
-  }, [loggedIn]); // eslint-disable-line react-hooks/exhaustive-deps
+    async function checkSession() {
+      try {
+        const response = await fetch("/api/admin/session", { cache: "no-store" });
+        const data = await response.json();
+        if (data.authenticated) {
+          router.replace("/admin/dashboard");
+          return;
+        }
+      } catch {
+        // no-op
+      } finally {
+        setChecking(false);
+      }
+    }
 
-  if (!loggedIn) {
+    checkSession();
+  }, [router]);
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setLoading(true);
+
+    try {
+      const response = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        showToast(data.error || "Invalid credentials.", "error");
+        return;
+      }
+
+      showToast("Login successful.", "success");
+      router.replace("/admin/dashboard");
+    } catch {
+      showToast("Network error. Please try again.", "error");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (checking) {
     return (
-      <div className="mx-auto max-w-md px-4 py-20">
-        <h1 className="mb-6 text-3xl font-bold">Admin Login</h1>
-        <form onSubmit={login} className="space-y-3 rounded-2xl border border-white/10 bg-white/5 p-6">
-          <input className="w-full rounded-lg border border-white/20 bg-black/40 p-3" required name="email" placeholder="Email" />
-          <input className="w-full rounded-lg border border-white/20 bg-black/40 p-3" required name="password" type="password" placeholder="Password" />
-          <button className="rounded-full bg-blue-600 px-5 py-2">Login</button>
-          {error && <p className="text-red-400">{error}</p>}
-        </form>
+      <div className="grid min-h-screen place-items-center bg-black px-4">
+        <p className="text-sm text-white/70">Checking session...</p>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6 px-4 py-10">
-      <h1 className="text-3xl font-bold">Lead Dashboard</h1>
-      <div className="flex flex-wrap gap-3">
-        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search name/email/clinic" className="rounded-lg border border-white/20 bg-black/40 p-2.5" />
-        <select value={status} onChange={(e) => setStatus(e.target.value)} className="rounded-lg border border-white/20 bg-black/40 p-2.5">
-          <option value="all">All</option>
-          <option value="new">New</option>
-          <option value="contacted">Contacted</option>
-          <option value="closed">Closed</option>
-        </select>
-        <button onClick={fetchLeads} className="rounded-full border border-blue-500/40 px-4">Apply</button>
-      </div>
-      <div className="space-y-3">
-        {leads.map((lead) => (
-          <div key={lead._id} className="rounded-2xl border border-white/10 bg-white/5 p-4">
-            <p className="font-semibold">{lead.name} · {lead.clinicName}</p>
-            <p className="text-sm text-white/70">{lead.email} · {lead.phone}</p>
-            <p className="my-2 text-white/80">{lead.message}</p>
-            <select value={lead.status} onChange={(e) => updateStatus(lead._id, e.target.value)} className="rounded-lg border border-white/20 bg-black/40 p-2">
-              <option value="new">new</option>
-              <option value="contacted">contacted</option>
-              <option value="closed">closed</option>
-            </select>
-          </div>
-        ))}
-      </div>
+    <div className="relative grid min-h-screen place-items-center overflow-hidden bg-black px-4">
+      <div className="pointer-events-none absolute left-1/2 top-[-200px] h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(255,50,50,0.25)_0%,rgba(255,50,50,0)_70%)]" />
+      <form onSubmit={handleSubmit} className="z-10 w-full max-w-md rounded-3xl border border-white/10 bg-white/5 p-7 backdrop-blur-2xl">
+        <p className="text-xs uppercase tracking-[0.28em] text-red-200/80">Admin</p>
+        <h1 className="mt-3 text-3xl font-semibold text-white">NeuroFlow Dashboard Login</h1>
+        <p className="mt-2 text-sm text-white/65">Secure access for leads, contacts, bookings, and analytics.</p>
+
+        <div className="mt-6 space-y-4">
+          <input
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            className="w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-sm text-white outline-none focus:border-red-300/50"
+            placeholder="Admin email"
+            required
+          />
+          <input
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            className="w-full rounded-xl border border-white/15 bg-black/30 px-4 py-3 text-sm text-white outline-none focus:border-red-300/50"
+            placeholder="Password"
+            required
+          />
+        </div>
+
+        <button
+          disabled={loading}
+          className="mt-5 inline-flex w-full items-center justify-center rounded-full bg-gradient-to-r from-red-600 to-red-500 px-5 py-3 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-70"
+        >
+          {loading ? "Logging in..." : "Login"}
+        </button>
+      </form>
     </div>
   );
 }

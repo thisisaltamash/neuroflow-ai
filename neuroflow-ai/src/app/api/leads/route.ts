@@ -1,25 +1,27 @@
-import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
+import { errorResponse, readJson, successResponse } from "@/lib/http";
+import { sendLeadEmails } from "@/lib/mailer";
+import { validateLeadPayload } from "@/lib/validators";
 import { Lead } from "@/models/Lead";
-import { sendLeadConfirmationEmail } from "@/lib/mailer";
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
-    const { name, phone, email, clinicName, message } = body;
+    const payload = await readJson(request);
+    if (!payload) return errorResponse("Invalid JSON payload.", 400);
 
-    if (!name || !phone || !email || !clinicName || !message) {
-      return NextResponse.json({ error: "All fields are required." }, { status: 400 });
-    }
+    const validated = validateLeadPayload(payload);
+    if (!validated.success) return errorResponse(validated.error, 400);
 
     await connectDB();
-    const lead = await Lead.create({ name, phone, email, clinicName, message });
+    const lead = await Lead.create(validated.data);
 
-    sendLeadConfirmationEmail(email, name).catch((e) => console.error("Email error:", e));
+    sendLeadEmails(validated.data).catch((error) => {
+      console.error("Lead email error:", error);
+    });
 
-    return NextResponse.json({ success: true, lead });
+    return successResponse({ success: true, lead }, 201);
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: "Failed to create lead." }, { status: 500 });
+    console.error("Lead API error:", error);
+    return errorResponse("Failed to submit lead.", 500);
   }
 }
