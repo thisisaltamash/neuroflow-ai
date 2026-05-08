@@ -20,7 +20,7 @@ export function Navbar() {
         <Link href="/" className="group inline-flex items-center gap-2">
           <span className="text-xl font-semibold tracking-wide text-white">NeuroFlow</span>
           <span className="rounded-full border border-red-400/40 bg-red-500/20 px-2 py-0.5 text-xs font-semibold text-red-200 shadow-[0_0_25px_rgba(255,40,40,0.35)]">
-            AI
+            SYSTEMS
           </span>
         </Link>
 

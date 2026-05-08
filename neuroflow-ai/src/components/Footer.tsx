@@ -7,9 +7,9 @@ export function Footer() {
     <footer className="mt-24 border-t border-white/10 bg-black/40">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-3 lg:px-8">
         <div>
-          <p className="text-xl font-semibold text-white">NeuroFlow AI</p>
+          <p className="text-xl font-semibold text-white">NeuroFlow Systems</p>
           <p className="mt-3 max-w-md text-sm text-white/65">
-            Production-grade AI automation systems for clinics, startups, agencies, and growth-focused businesses.
+            Premium AI automation systems for clinics, dentists, gyms, salons, real estate, and local businesses.
           </p>
         </div>
 
@@ -46,7 +46,7 @@ export function Footer() {
       </div>
 
       <div className="border-t border-white/10 px-4 py-5 text-center text-xs text-white/45">
-        © {new Date().getFullYear()} NeuroFlow AI. All rights reserved.
+        © {new Date().getFullYear()} NeuroFlow Systems. All rights reserved.
       </div>
     </footer>
   );

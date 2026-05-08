@@ -1,0 +1,73 @@
+0 verbose cli /usr/local/bin/node /usr/local/bin/npm
+1 info using npm@10.9.2
+2 info using node@v22.17.0
+3 silly config load:file:/usr/local/lib/node_modules/npm/npmrc
+4 silly config load:file:/Users/mohdaltamash/.npmrc
+5 silly config load:file:/usr/local/etc/npmrc
+6 verbose title npm install lucide-react
+7 verbose argv "install" "lucide-react" "--cache" ".npm-cache"
+8 verbose logfile logs-max:10 dir:/Users/mohdaltamash/Desktop/project/.npm-cache/_logs/2026-05-08T18_56_26_986Z-
+9 verbose logfile /Users/mohdaltamash/Desktop/project/.npm-cache/_logs/2026-05-08T18_56_26_986Z-debug-0.log
+10 silly logfile done cleaning log files
+11 silly packumentCache heap:2197815296 maxSize:549453824 maxEntrySize:274726912
+12 silly idealTree buildDeps
+13 silly fetch manifest lucide-react@*
+14 silly packumentCache full:https://registry.npmjs.org/lucide-react cache-miss
+15 http fetch GET 200 https://registry.npmjs.org/npm 5686ms
+16 http fetch GET 200 https://registry.npmjs.org/lucide-react 6011ms (cache miss)
+17 silly packumentCache full:https://registry.npmjs.org/lucide-react set size:undefined disposed:false
+18 silly fetch manifest react@^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+19 silly packumentCache full:https://registry.npmjs.org/react cache-miss
+20 http fetch GET 200 https://registry.npmjs.org/react 2543ms (cache miss)
+21 silly packumentCache full:https://registry.npmjs.org/react set size:undefined disposed:false
+22 silly placeDep ROOT lucide-react@1.14.0 OK for: mohdaltamash@1.0.0 want: *
+23 silly placeDep ROOT react@19.2.6 OK for: lucide-react@1.14.0 want: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+24 silly reify moves {}
+25 verbose stack Error: EPERM: operation not permitted, mkdir '/Users/mohdaltamash/node_modules/fsevents'
+25 verbose stack     at async mkdir (node:internal/fs/promises:858:10)
+25 verbose stack     at async /usr/local/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:624:20
+25 verbose stack     at async Promise.allSettled (index 0)
+25 verbose stack     at async [reifyPackages] (/usr/local/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:325:11)
+25 verbose stack     at async Arborist.reify (/usr/local/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:142:5)
+25 verbose stack     at async Install.exec (/usr/local/lib/node_modules/npm/lib/commands/install.js:150:5)
+25 verbose stack     at async Npm.exec (/usr/local/lib/node_modules/npm/lib/npm.js:207:9)
+25 verbose stack     at async module.exports (/usr/local/lib/node_modules/npm/lib/cli/entry.js:74:5)
+26 error code EPERM
+27 error syscall mkdir
+28 error path /Users/mohdaltamash/node_modules/fsevents
+29 error errno -1
+30 error Error: EPERM: operation not permitted, mkdir '/Users/mohdaltamash/node_modules/fsevents'
+30 error     at async mkdir (node:internal/fs/promises:858:10)
+30 error     at async /usr/local/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:624:20
+30 error     at async Promise.allSettled (index 0)
+30 error     at async [reifyPackages] (/usr/local/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:325:11)
+30 error     at async Arborist.reify (/usr/local/lib/node_modules/npm/node_modules/@npmcli/arborist/lib/arborist/reify.js:142:5)
+30 error     at async Install.exec (/usr/local/lib/node_modules/npm/lib/commands/install.js:150:5)
+30 error     at async Npm.exec (/usr/local/lib/node_modules/npm/lib/npm.js:207:9)
+30 error     at async module.exports (/usr/local/lib/node_modules/npm/lib/cli/entry.js:74:5) {
+30 error   errno: -1,
+30 error   code: 'EPERM',
+30 error   syscall: 'mkdir',
+30 error   path: '/Users/mohdaltamash/node_modules/fsevents'
+30 error }
+31 error
+31 error The operation was rejected by your operating system.
+31 error It is likely you do not have the permissions to access this file as the current user
+31 error
+31 error If you believe this might be a permissions issue, please double-check the
+31 error permissions of the file and its containing directories, or try running
+31 error the command again as root/Administrator.
+32 silly unfinished npm timer reify 1778266588141
+33 silly unfinished npm timer reify:createSparse 1778266597138
+34 verbose cwd /Users/mohdaltamash/Desktop/project
+35 verbose os Darwin 24.6.0
+36 verbose node v22.17.0
+37 verbose npm  v10.9.2
+38 notice
+38 notice New major version of npm available! 10.9.2 -> 11.14.1
+38 notice Changelog: https://github.com/npm/cli/releases/tag/v11.14.1
+38 notice To update run: npm install -g npm@11.14.1
+38 notice  { force: true, [Symbol(proc-log.meta)]: true }
+39 verbose exit -1
+40 verbose code -1
+41 error A complete log of this run can be found in: /Users/mohdaltamash/Desktop/project/.npm-cache/_logs/2026-05-08T18_56_26_986Z-debug-0.log

@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, Space_Grotesk } from "next/font/google";
+import { Inter, Playfair_Display } from "next/font/google";
 import { SiteShell } from "@/components/SiteShell";
 import { ToastProvider } from "@/components/providers/ToastProvider";
 import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/constants";
 import "./globals.css";
 
-const displayFont = Space_Grotesk({
+const displayFont = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-display"
 });
 
-const bodyFont = Plus_Jakarta_Sans({
+const bodyFont = Inter({
   subsets: ["latin"],
   variable: "--font-body"
 });

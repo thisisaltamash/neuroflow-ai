@@ -1,6 +1,6 @@
-export const SITE_NAME = "NeuroFlow AI";
+export const SITE_NAME = "NeuroFlow Systems";
 export const SITE_DESCRIPTION =
-  "NeuroFlow AI builds premium automation systems for businesses, clinics, doctors, startups, agencies, and local companies.";
+  "NeuroFlow Systems builds premium AI automation systems for clinics, dentists, gyms, salons, real estate, and local businesses.";
 
 export const ADMIN_COOKIE_NAME = "neuroflow_admin_token";
 

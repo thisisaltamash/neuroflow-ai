@@ -13,13 +13,13 @@ const quickReplies = [
   },
   {
     prompt: "Do you work with clinics?",
-    answer: "Yes. NeuroFlow AI specializes in clinic and doctor workflows including inquiry triage, reminders, and booking automation."
+    answer: "Yes. NeuroFlow Systems specializes in clinic and doctor workflows including inquiry triage, reminders, and booking automation."
   }
 ];
 
 export function FloatingChatbotWidget() {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<string[]>(["Hi, I am NeuroFlow Assistant. Ask me about AI automation services."]);
+  const [messages, setMessages] = useState<string[]>(["Hi, I am NeuroFlow Systems Assistant. Ask me about AI automation services."]);
 
   return (
     <div className="fixed bottom-5 right-5 z-50">

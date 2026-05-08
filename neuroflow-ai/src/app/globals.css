@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --background: #060708;
+  --background: #050505;
   --surface: rgba(255, 255, 255, 0.05);
   --surface-strong: rgba(255, 255, 255, 0.1);
   --text: #f8f8f8;
@@ -24,9 +24,9 @@ body {
   margin: 0;
   color: var(--text);
   background:
-    radial-gradient(circle at 15% 18%, rgba(255, 70, 70, 0.2), transparent 32%),
-    radial-gradient(circle at 82% 12%, rgba(255, 100, 100, 0.14), transparent 28%),
-    radial-gradient(circle at 55% 120%, rgba(255, 45, 45, 0.11), transparent 38%),
+    radial-gradient(circle at 15% 18%, rgba(255, 70, 70, 0.14), transparent 32%),
+    radial-gradient(circle at 82% 12%, rgba(255, 100, 100, 0.1), transparent 28%),
+    radial-gradient(circle at 55% 120%, rgba(255, 45, 45, 0.07), transparent 38%),
     var(--background);
   font-family: var(--font-body), ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
 }
@@ -61,6 +61,20 @@ button {
 option {
   background: #121212;
   color: #fff;
+}
+
+@keyframes ambientFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(2.5rem, 1.5rem, 0) scale(1.05);
+  }
+}
+
+.cursor-glow {
+  animation: ambientFloat 10s ease-in-out infinite;
 }
 
 @keyframes shimmer {
