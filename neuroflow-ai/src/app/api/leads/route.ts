@@ -1,4 +1,5 @@
 import { connectDB } from "@/lib/db";
+import { sendToFormspree } from "@/lib/formspree";
 import { errorResponse, readJson, successResponse } from "@/lib/http";
 import { sendLeadEmails } from "@/lib/mailer";
 import { validateLeadPayload } from "@/lib/validators";
@@ -11,6 +12,10 @@ export async function POST(request: Request) {
 
     const validated = validateLeadPayload(payload);
     if (!validated.success) return errorResponse(validated.error, 400);
+
+    sendToFormspree("lead", validated.data).catch((error) => {
+      console.error("Lead Formspree forward error:", error);
+    });
 
     await connectDB();
     const lead = await Lead.create(validated.data);

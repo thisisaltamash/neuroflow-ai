@@ -1,4 +1,5 @@
 import { connectDB } from "@/lib/db";
+import { sendToFormspree } from "@/lib/formspree";
 import { errorResponse, readJson, successResponse } from "@/lib/http";
 import { sendContactEmails } from "@/lib/mailer";
 import { validateContactPayload } from "@/lib/validators";
@@ -11,6 +12,10 @@ export async function POST(request: Request) {
 
     const validated = validateContactPayload(payload);
     if (!validated.success) return errorResponse(validated.error, 400);
+
+    sendToFormspree("contact", validated.data).catch((error) => {
+      console.error("Contact Formspree forward error:", error);
+    });
 
     await connectDB();
     const contact = await Contact.create(validated.data);

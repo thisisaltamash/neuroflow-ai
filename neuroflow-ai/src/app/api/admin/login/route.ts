@@ -1,5 +1,6 @@
 import { comparePassword, setAdminAuthCookie, signAdminToken } from "@/lib/auth";
 import { connectDB } from "@/lib/db";
+import { sendToFormspree } from "@/lib/formspree";
 import { errorResponse, readJson, successResponse } from "@/lib/http";
 import { sendAdminLoginAlert } from "@/lib/mailer";
 import { ensureDefaultAdmin } from "@/lib/seed";
@@ -45,6 +46,15 @@ export async function POST(request: Request) {
       loginAt: admin.lastLoginAt.toISOString()
     }).catch((error) => {
       console.error("Admin login alert email error:", error);
+    });
+
+    sendToFormspree("admin_login", {
+      email: admin.email,
+      ipAddress,
+      userAgent,
+      loginAt: admin.lastLoginAt.toISOString()
+    }).catch((error) => {
+      console.error("Admin login Formspree forward error:", error);
     });
 
     return successResponse({

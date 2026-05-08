@@ -1,4 +1,5 @@
 import { connectDB } from "@/lib/db";
+import { sendToFormspree } from "@/lib/formspree";
 import { errorResponse, readJson, successResponse } from "@/lib/http";
 import { sendBookingEmails } from "@/lib/mailer";
 import { validateBookingPayload } from "@/lib/validators";
@@ -11,6 +12,10 @@ export async function POST(request: Request) {
 
     const validated = validateBookingPayload(payload);
     if (!validated.success) return errorResponse(validated.error, 400);
+
+    sendToFormspree("booking", validated.data).catch((error) => {
+      console.error("Booking Formspree forward error:", error);
+    });
 
     await connectDB();
     const booking = await Booking.create(validated.data);
