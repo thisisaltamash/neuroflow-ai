@@ -137,3 +137,17 @@ export async function sendBookingEmails(data: BookingPayload) {
     })
   ]);
 }
+
+export async function sendAdminLoginAlert(data: { email: string; ipAddress: string; userAgent: string; loginAt: string }) {
+  await sendMail({
+    to: getAdminNotificationEmail(),
+    subject: `Admin Login Alert - ${data.email}`,
+    html: `
+      <h3>Admin Login Detected</h3>
+      <p><strong>Email:</strong> ${data.email}</p>
+      <p><strong>Login Time:</strong> ${data.loginAt}</p>
+      <p><strong>IP Address:</strong> ${data.ipAddress}</p>
+      <p><strong>Device:</strong> ${data.userAgent}</p>
+    `
+  });
+}

@@ -1,6 +1,7 @@
 import { comparePassword, setAdminAuthCookie, signAdminToken } from "@/lib/auth";
 import { connectDB } from "@/lib/db";
 import { errorResponse, readJson, successResponse } from "@/lib/http";
+import { sendAdminLoginAlert } from "@/lib/mailer";
 import { ensureDefaultAdmin } from "@/lib/seed";
 import { validateAdminLoginPayload } from "@/lib/validators";
 import { Admin } from "@/models/Admin";
@@ -32,6 +33,19 @@ export async function POST(request: Request) {
 
     admin.lastLoginAt = new Date();
     await admin.save();
+
+    const forwardedFor = request.headers.get("x-forwarded-for");
+    const ipAddress = forwardedFor?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "Unknown";
+    const userAgent = request.headers.get("user-agent") || "Unknown";
+
+    sendAdminLoginAlert({
+      email: admin.email,
+      ipAddress,
+      userAgent,
+      loginAt: admin.lastLoginAt.toISOString()
+    }).catch((error) => {
+      console.error("Admin login alert email error:", error);
+    });
 
     return successResponse({
       success: true,
